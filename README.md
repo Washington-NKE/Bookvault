@@ -1270,7 +1270,7 @@ seed();
     @apply text-light-500 text-sm line-clamp-1 break-words w-full;
   }
 }
-```
+
 
 </details>
 

@@ -61,7 +61,6 @@ const page = async ({
   const selectedRole = searchParams.role || "";
 
   
-  // Build where clause based on filters
   const whereClause = [];
   if (search) {
     whereClause.push(
