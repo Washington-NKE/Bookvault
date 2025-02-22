@@ -6,12 +6,11 @@ import { sql, eq } from "drizzle-orm";
 import {books} from "@/database/schema";
 import { desc, like, and, or } from "drizzle-orm";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
-import { Edit, Trash2, Search, ChevronLeft, ChevronRight} from "lucide-react";
+import { Edit, Trash2, ChevronLeft, ChevronRight} from "lucide-react";
 import { deleteBook } from "@/lib/actions/book";
 import {toast} from "@/hooks/use-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
-import{Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
+import { unknown } from "zod";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -43,7 +42,8 @@ const Page = async ({
    .from(books)
    .where(and(...whereClause));
 
-  const totalPages = Math.ceil(totalItems[0].count / ITEMS_PER_PAGE);
+   const totalPages = Math.ceil((totalItems[0] as { count: number}).count / ITEMS_PER_PAGE);
+
 
   // Get filtered and paginated books
   const allBooks = await db
@@ -62,7 +62,7 @@ const Page = async ({
           title: "Success",
           description: "Book deleted successfully",
         });
-      } catch (error) {
+      } catch (e) {
         toast({
           title: "Error",
           description: "Failed to delete book",

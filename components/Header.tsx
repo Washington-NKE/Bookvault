@@ -11,29 +11,37 @@ import { eq } from "drizzle-orm";
 
 
 const Header = async ({session}:{session: Session}) => {
+  const userId= session?.user?.id as string;
       const isAdmin = await db
         .select({ isAdmin: users.role })
         .from(users)
-        .where(eq(users.id, session.user.id))
+        .where(eq(users.id, userId))
         .limit(1)
         .then((res) => res[0]?.isAdmin === "ADMIN");
 
   return (
-    <header className="my-10 flex justify-between gap-5">
+    <header className="my-10 flex items-center justify-between">
       <Link href="/">
         <Image src="/icons/logo.svg" alt="logo" width={40} height={40} />
       </Link>
 
-      <ul className="flex flex-row items-center gap-8">
+      <ul className="flex items-center gap-8">
+        <li>
+        <Link href="">
+              <Button variant="outline" className=" border-transparent bg-transparent p-0  text-gray-100 transition duration-300 
+              hover:border-b-yellow-500    hover:bg-transparent  hover:text-gray-100   active:text-amber-400 ">Search</Button>
+            </Link>
+        </li>
       {isAdmin && (
           <li>
-            <Link href="/admin" className="mt-5" >
-              <Button variant="outline" className="bg-amber-100">Admin</Button>
+            <Link href="/admin">
+              <Button variant="outline" className="border-transparent bg-transparent p-0  text-gray-100 transition duration-300 
+              hover:border-b-yellow-500    hover:bg-transparent  hover:text-gray-100   active:text-amber-400">Admin</Button>
             </Link>
           </li>
         )}
         <li>
-          <Link href="/my-profile" className="mb-10">
+          <Link href="/my-profile">
             <Avatar>
               <AvatarFallback className="bg-amber-100">{getInitials(session?.user?.name || "IN")}</AvatarFallback>
             </Avatar>
@@ -47,7 +55,6 @@ const Header = async ({session}:{session: Session}) => {
 
               await signOut();
             }}
-            className="mb-10"
           >
             <Button>Logout</Button>
           </form>

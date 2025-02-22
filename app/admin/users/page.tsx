@@ -15,14 +15,6 @@ import {
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { updateUserStatus } from "@/lib/actions/user";
 import { toast } from "@/hooks/use-toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge} from "@/components/ui/badge";
 import {

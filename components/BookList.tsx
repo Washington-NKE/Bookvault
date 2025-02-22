@@ -1,7 +1,7 @@
 import React from "react";
 import BookCard from "@/components/BookCard";
 
-interface BorrowInfo {
+interface borrowInfo{
   borrowDate: string;
   dueDate: string;
   status: string;
@@ -11,11 +11,10 @@ interface Props {
   title: string;
   books: Book[];
   containerClassName?: string;
-  borrowDetails?: (book: Book) => React.ReactNode;
+  borrowDetails?: Record<string, borrowInfo>;
 }
 
-const BookList = ({ title, books, containerClassName, borrowDetails = {} }: Props) => {
-  console.log( "Passed Books",borrowDetails)
+const BookList = ({ title, books, containerClassName, borrowDetails}: Props) => {
   if (title === "Latest Books" && books.length < 2) return;
 
   return (
@@ -24,7 +23,7 @@ const BookList = ({ title, books, containerClassName, borrowDetails = {} }: Prop
 
       <ul className="book-list">
         {books.map((book) => (
-          <BookCard key={book.title} {...book} borrowInfo={borrowDetails[book.title] || null}/>
+          <BookCard key={book.title} {...book} borrowInfo={borrowDetails?.[book.id]}/>
         ))}
       </ul>
     </section>

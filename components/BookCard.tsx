@@ -4,6 +4,8 @@ import BookCover from "@/components/BookCover";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { ScrollText } from "lucide-react";
+import Receipt from "./Receipt";
 
 interface BorrowInfo {
   borrowDate: string;
@@ -20,7 +22,21 @@ interface BookCardProps {
   rating: number;
   coverUrl: string;
   coverColor: string;
-  borrowInfo?: BorrowInfo | null; // ✅ Correctly defined
+  borrowInfo?: BorrowInfo; 
+}
+
+const hexToRgba = (hex: string, opacity: number) =>{
+  hex= hex.replace("#","");
+
+  if(hex.length === 3){
+    hex = hex.split('').map(char => char + char).join("");
+  }
+
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
 
 const BookCard = ({
@@ -29,17 +45,18 @@ const BookCard = ({
   genre,
   coverColor,
   coverUrl,
-  isLoanedBook = false,
   borrowInfo,
 }: BookCardProps) => (
-  <li className={cn(isLoanedBook && "xs:w-52 w-full")}>
+  <li className={cn(borrowInfo && "xs:w-52 w-full bg-dark-500 p-4 rounded-md shadow")}>
     <Link
       href={`/books/${id}`}
-      className={cn(isLoanedBook && "w-full flex flex-col items-center")}
+      className={cn(borrowInfo && "w-full flex flex-col items-center")}
     >
-      <BookCover coverColor={coverColor} coverImage={coverUrl} />
-{console.log("In book card", borrowInfo)}
-      <div className={cn("mt-4", !isLoanedBook && "xs:max-w-40 max-w-28")}>
+      <div style={{backgroundColor: hexToRgba(coverColor, 0.2)}} className="rounded-md p-4">
+      <BookCover coverColor={coverColor} coverImage={coverUrl} {...(borrowInfo && {variant: "medium"})} />
+      </div>
+      
+      <div className={cn("mt-4", !borrowInfo && "xs:max-w-40 max-w-28")}>
         <p className="book-title">{title}</p>
         <p className="book-genre">{genre}</p>
       </div>
@@ -47,21 +64,31 @@ const BookCard = ({
       {borrowInfo && (
         <div className="mt-3 w-full">
           <div className="book-loaned">
-            <Image
-              src="/icons/calendar.svg"
-              alt="calendar"
-              width={18}
-              height={18}
-              className="object-contain"
-            />
-            <div className="borrow-info mt-2 text-sm text-gray-500">
-          <p>Borrowed: {borrowInfo.borrowDate}</p>
-          <p>Due: {borrowInfo.dueDate}</p>
-          <p>Status: {borrowInfo.status}</p>
+            <div className="mt-2 text-sm text-gray-500">
+              <div className="flex gap-2">
+                <Image
+                src="/icons/calendar.svg"
+                alt="calendar"
+                width={18}
+                height={18}
+                />
+                <p>Borrowed: {borrowInfo.borrowDate}</p>
+              </div>
+            <div className="flex items-center justify-between ">
+            <div className="flex gap-2">
+              <Image
+                src="/icons/clock.svg"
+                alt="calendar"
+                width={18}
+                height={18}
+              />
+              <p>Due: {borrowInfo.dueDate}</p>
+            </div>
+            
+           <Receipt receiptId={id} />
+            </div>
         </div>
-          </div>
-
-          <Button className="book-btn">Download receipt</Button>
+        </div>   
         </div>
       )}
     </Link>

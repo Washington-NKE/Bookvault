@@ -7,11 +7,10 @@ const SearchForm = () => {
   
   return (
     <Form action="/" scroll={false} className='search-form'>
-      <input name='query' defaultValue="" className='search-input' placeholder='search users, books by title, author, genre' />
+      <input name='query' defaultValue="" className='search-input border-2' placeholder='search users, books by title, author, genre' />
       <div>
         {query && <SearchFormReset />}
 
-        <button type='submit' className='search-btn text-white'>S</button>
       </div>
     </Form>
   )
