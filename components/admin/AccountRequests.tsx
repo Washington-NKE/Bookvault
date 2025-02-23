@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Avatar } from '@radix-ui/react-avatar';
+import {Avatar, AvatarFallback } from '../ui/avatar';
+import { getInitials } from '@/lib/utils';
 
 const AccountRequests = () => {
     const users = [
@@ -15,13 +16,15 @@ const AccountRequests = () => {
         <CardHeader >
           <CardTitle>Account Requests</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-3 gap-4">
+        <CardContent className="flex flex-wrap gap-4">
           {users.map((user, index) => (
-            <div key={index} className="flex items-center space-x-4 rounded-lg border  p-2">
-              <Avatar className="size-12">{user.name[0]}</Avatar>
+            <div key={index} className="w-48 rounded-lg border p-4 shadow-sm">  
+               <Avatar>
+              <AvatarFallback className="bg-amber-100">{getInitials(user?.name || "IN")}</AvatarFallback>
+            </Avatar>
               <div>
-                <p className="font-medium">{user.name}</p>
-                <p className="text-sm text-gray-500">{user.email}</p>
+                <p className="font-medium truncate">{user.name}</p>
+                <p className="text-sm text-gray-500 truncate w-full">{user.email}</p>
               </div>
             </div>
           ))}

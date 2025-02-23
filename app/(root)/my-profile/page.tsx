@@ -6,11 +6,11 @@ import { auth } from "@/auth";
 const Page = async () => {
   const session = await auth();
   return (
-    <div className="flex w-full gap-4">
-      <div className=" flex  min-h-[200px] w-1/2 ">
+    <div className="flex w-full flex-col gap-4 md:flex-row">
+      <div className=" flex  min-h-[200px] w-full md:w-1/2 ">
       <Profile userId={session?.user?.id as string} />
       </div>
-      <div className="w-1/2">
+      <div className="w-full md:w-1/2">
       <BorrowedBooks userId = {session?.user?.id as string} />
       </div>
     </div>
