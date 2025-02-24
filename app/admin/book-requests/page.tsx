@@ -97,20 +97,20 @@ const BorrowRequests = async () => {
                   <Avatar>
                     <AvatarFallback className="bg-blue-200 font-bold text-blue-600 ">{getInitials(book.userName || "IN")}</AvatarFallback>
                   </Avatar>
-                    <div>
+                  <div>
                       <p className='font-medium'>{book.userName}</p>
                       <p className='text-sm text-gray-500'>{book.userEmail}</p>
                     </div>
                   </div>
                 </td>
                 <td>
-                  <span className={`${getStatusColor(book.status)} cursor-pointer rounded-xl p-2  font-semibold`}>
+                  <span className={`${getStatusColor(book.status)} text-sm cursor-pointer rounded-xl p-2  font-semibold`}>
                   {capitalizeFirstLetter(book.status.replace('_', ' '))}
                   </span>
                 </td>
                 <td className='py-4'>{formatDate(book.borrowedDate)}</td>
-                <td className='py-4'>(book.returnDate)</td>
-                <td className='py-4'>(book.dueDate)</td>
+                <td className='py-4'>{book.returnDate}</td>
+                <td className='py-4'>{book.dueDate}</td>
                 <td>
                   <Button 
                   variant="outline"

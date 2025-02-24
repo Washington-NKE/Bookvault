@@ -2,34 +2,20 @@ import Sort from '@/components/admin/Sort';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { db } from '@/database/drizzle';
+import { users } from '@/database/schema';
 import { getInitials } from '@/lib/utils';
+import { desc, eq } from 'drizzle-orm';
 import { XCircle } from 'lucide-react';
 import React from 'react'
 
-const page = () => {
-    const requests = [
-        {
-          name: "Darrell Steward",
-          email: "darrell.s@gmail.com",
-          dateJoined: "Dec 19 2023",
-          universityIdNo: "9023423789",
-          avatar: "/api/placeholder/32/32"
-        },
-        {
-          name: "Marc Antman",
-          email: "marc.new@mail.com",
-          dateJoined: "Dec 19 2023",
-          universityIdNo: "4564234523",
-          avatar: "/api/placeholder/32/32"
-        },
-        {
-          name: "Susan Drake",
-          email: "contact@student.edu",
-          dateJoined: "Dec 19 2023",
-          universityIdNo: "7831834289",
-          avatar: "/api/placeholder/32/32"
-        }
-      ];
+const page = async () => {
+    const requests =await db.select({
+          name: users.fullName,
+          email: users.email,
+          createdAt: users.createdAt,
+          registrationNumber: users.registrationNumber,
+        }).from(users).where(eq(users.status, "PENDING")).orderBy(desc(users.createdAt));
    
   return (
     <Card className='w-full max-w-4xl'>
@@ -56,8 +42,8 @@ const page = () => {
                                 <div className='text-sm text-gray-500'>{request.email}</div>
                             </div>
                         </div>
-                        <div className='text-sm'>{request.dateJoined}</div>
-                        <div className='text-sm'>{request.universityIdNo}</div>
+                        <div className='text-sm'>{request.createdAt?.toDateString()}</div>
+                        <div className='text-sm'>{request.registrationNumber}</div>
                     <div className='flex items-center space-x-4'>
                         <Button size="sm" className='bg-green-200 hover:bg-green-600 text-green-700'>
                             Approve Account

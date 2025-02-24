@@ -1,7 +1,10 @@
+import { db } from '@/database/drizzle';
+import { borrowRecords } from '@/database/schema';
 import React from 'react'
 import {FaArrowUp, FaArrowDown} from 'react-icons/fa';
 
 const Stats = () => {
+  
     const change = -2;
     const change2 = 3;
     const change3 = 3;
