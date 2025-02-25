@@ -10,7 +10,6 @@ const Page = () => {
 
   return (
     <div className="p-6">
-      {/* <Stats /> */}
       <Stats />
       <div className="mt-6 grid grid-cols-12 gap-6"> 
         <div className="col-span-6">

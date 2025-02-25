@@ -1,5 +1,5 @@
 import { Session } from "next-auth";
-import SearchForm from "./forms/SearchForm";
+import SearchBar from "../SearchBar";
 
 const Header = ({ session }: { session: Session }) => {
   return (
@@ -13,7 +13,7 @@ const Header = ({ session }: { session: Session }) => {
         </p>
       </div>
 
-      <SearchForm />
+      <SearchBar />     
     </header>
   );
 };
