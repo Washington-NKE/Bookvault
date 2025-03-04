@@ -21,16 +21,13 @@ export default function SearchBar({
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (query) {
-        // Create new URLSearchParams object
         const params = new URLSearchParams(searchParams);
         params.set('query', query);
         params.set('type', searchType);
         params.set('page', '1'); // Reset to first page on new search
         
-        // Update the URL with the new params
         router.push(`${pathname}?${params.toString()}`);
       } else if (searchParams.has('query')) {
-        // Remove query if search field is empty
         const params = new URLSearchParams(searchParams);
         params.delete('query');
         router.push(`${pathname}?${params.toString()}`);

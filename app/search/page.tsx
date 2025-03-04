@@ -1,9 +1,5 @@
-//import { Suspense } from 'react';
 import SearchBar from '@/components/SearchBar';
 import BookCard from '@/components/BookCard';
-//import UserCard from '@/components/UserCard';
-//import BorrowRequestCard from '@/components/BorrowRequestCard';
-//import AccountRequestCard from '@/components/AccountRequestCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { fetchSearchResults } from '@/lib/data-fetching';
 import BookList from '@/components/BookList';
@@ -18,7 +14,6 @@ export default async function SearchResultsPage({
   const page = parseInt(searchParams.page || '1');
   const limit = parseInt(searchParams.limit || '10');
   
-  // Default to empty results if no query
   let results = {
     books: [],
     users: [],
@@ -30,7 +25,6 @@ export default async function SearchResultsPage({
     results = await fetchSearchResults(query, type, page, limit);
   }
   
-  // Count total results
   const totalResults = 
     results.books.length + 
     results.users.length + 
@@ -61,42 +55,13 @@ export default async function SearchResultsPage({
         </TabsList>
         
         <TabsContent value="all">
-          {/* Show all results */}
           {totalResults === 0 && query && (
-            <p>No results found for "{query}"</p>
+            <p>No results found</p>
           )}
-          
-          {results.books.length > 0 && (
-            <>
-              <h2 className="text-xl font-semibold mb-3">Books</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                {results.books.map((book) => (
-                  <BookList key={book.id} title="Search Results"
-                  books={book.slice(1)}
-                  containerClassName="mt-28" />
-                ))}
-              </div>
-            </>
-          )}
-          
-          {/* Similarly render other result types */}
-          {/* ... */}
+          {/* Render results here */}
         </TabsContent>
         
-        <TabsContent value="books">
-          {results.books.length === 0 && query && (
-            <p>No book results found for "{query}"</p>
-          )}
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {results.books.map((book) => (
-              <BookCard key={book.id} book={book} />
-            ))}
-          </div>
-        </TabsContent>
-        
-        {/* Other tab contents for users, borrow requests, account requests */}
-        {/* ... */}
+        {/* Render other TabsContent for books, users, etc. */}
       </Tabs>
     </div>
   );

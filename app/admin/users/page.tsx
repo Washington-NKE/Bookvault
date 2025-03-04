@@ -102,53 +102,58 @@ const page = async ({
       <div className="mt-4 w-full overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="w-[30px]"></TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Registration No.</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Last Active</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
+        <TableRow>
+          <TableHead className="w-[30px]"></TableHead>
+          <TableHead>Name</TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>Registration No.</TableHead>
+          <TableHead>Role</TableHead>
+          <TableHead>Last Active</TableHead>
+          <TableHead>Actions</TableHead>
+        </TableRow>
           </TableHeader>
           <TableBody>
-            {allUsers.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>
-                  <label htmlFor={`select-${user.id}`} className="relative cursor-pointer flex items-center gap-2">
-                    <div className="relative">
-                      <input type="checkbox" id={`select-${user.id}`} className="absolute inset-0 opacity-0 peer" />
-                      <Avatar className="peer-checked:opacity-70 peer-checked:ring-2 peer-checked:ring-blue-500">
-                        <AvatarFallback   className={`${getColorFromName(user.fullName)} text-black`}>
-                          {getInitials(user?.fullName || "IN")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 peer-checked:opacity-100">
-                        <Check className="w-5 h-5 text-blue-600 bg-white rounded-full p-0.5 shadow-md" />
-                      </div>
-                    </div>
-                  </label>
-                </TableCell>
+        {allUsers.map((user) => (
+          <TableRow key={user.id}>
+            <TableCell>
+          <label htmlFor={`select-${user.id}`} className="relative cursor-pointer flex items-center gap-2">
+            <div className="relative">
+              <input type="checkbox" id={`select-${user.id}`} className="absolute inset-0 opacity-0 peer" />
+              <Avatar className="peer-checked:opacity-70 peer-checked:ring-2 peer-checked:ring-blue-500">
+            <AvatarFallback   className={`${getColorFromName(user.fullName)} text-black`}>
+              {getInitials(user?.fullName || "IN")}
+            </AvatarFallback>
+              </Avatar>
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 peer-checked:opacity-100">
+            <Check className="w-5 h-5 text-blue-600 bg-white rounded-full p-0.5 shadow-md" />
+              </div>
+            </div>
+          </label>
+            </TableCell>
 
-                <TableCell className="font-medium">{user.fullName}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.registrationNumber}</TableCell>
-                <TableCell>
-                  <RoleDropdown
-                    currentRole={user.role as UserRole}
-                    userId={user.id}
-                    onUpdateRole={updateUserRole}
-                  />
-                </TableCell>
-                <TableCell>
-                  {user.lastActivityDate ? new Date(user.lastActivityDate).toLocaleDateString() : '-'}
-                </TableCell>
-                <TableCell>
-                  <DeleteButton userId={user.id} onDelete={deleteUser} />
-                </TableCell>
-              </TableRow>
-            ))}
+            <TableCell className="font-medium">{user.fullName}</TableCell>
+            <TableCell>{user.email}</TableCell>
+            <TableCell>{user.registrationNumber}</TableCell>
+            <TableCell>
+          <RoleDropdown
+            currentRole={user.role as UserRole}
+            userId={user.id}
+            onUpdateRole={updateUserRole}
+          />
+            </TableCell>
+            <TableCell>
+          {user.lastActivityDate ? 
+            new Date(user.lastActivityDate).toLocaleDateString('en-US', { 
+              month: 'short', 
+              day: 'numeric', 
+              year: 'numeric' 
+            }) : '-'}
+            </TableCell>
+            <TableCell>
+          <DeleteButton userId={user.id} onDelete={deleteUser} />
+            </TableCell>
+          </TableRow>
+        ))}
           </TableBody>
         </Table>
       </div>

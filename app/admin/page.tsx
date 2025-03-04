@@ -12,11 +12,11 @@ const Page = () => {
     <div className="p-6">
       <Stats />
       <div className="mt-6 grid grid-cols-12 gap-6"> 
-        <div className="col-span-6">
+        <div className="col-span-12 md:col-span-6">
           <BorrowRequests />
           <AccountRequests />
-          </div>
-        <div className="col-span-6">
+        </div>
+        <div className="col-span-12 md:col-span-6">
           <RecentlyAddedBooks />
         </div>
       </div>
