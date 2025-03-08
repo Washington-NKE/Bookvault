@@ -27,7 +27,7 @@ const Header = async ({session}:{session: Session}) => {
 
       <ul className="flex items-center gap-8">
         <li>
-        <Link href="">
+        <Link href="/search">
               <Button variant="outline" className=" border-transparent bg-transparent p-0  text-gray-100 transition duration-300 
               hover:border-b-yellow-500    hover:bg-transparent  hover:text-gray-100   active:text-amber-400 ">Search</Button>
             </Link>

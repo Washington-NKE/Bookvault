@@ -25,7 +25,6 @@ import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-// import ImageUpload from "./ImageUpload";
 
 interface Props<T extends FieldValues> {
   schema: ZodType<T>;
@@ -78,7 +77,7 @@ const AuthForm = <T extends FieldValues>({
       <p className="text-light-100">
         {isSignIn
           ? "Access the vast collection of resources, and stay updated"
-          : "Please complete all fields and upload a valid university ID to gain access to the library"}
+          : "Please complete all fields and provide a valid Registration Number to gain access to the library"}
       </p>
       <Form {...form}>
         <form

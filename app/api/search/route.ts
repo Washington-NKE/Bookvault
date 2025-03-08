@@ -1,121 +1,62 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { eq, like, or, and, desc } from 'drizzle-orm';
-import { books, users, borrowRequests, accountRequests } from '@/lib/schema';
+// app/api/search/route.ts
+import { NextResponse } from 'next/server';
+import { ilike, or, and } from 'drizzle-orm';
+import { db } from '@/database/drizzle';
+import { books } from '@/database/schema';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  
-  const query = searchParams.get('query')?.toLowerCase() || '';
-  const type = searchParams.get('type') || 'all'; // books, users, borrow-requests, account-requests, all
-  const limit = parseInt(searchParams.get('limit') || '10');
-  const page = parseInt(searchParams.get('page') || '1');
+  const query = searchParams.get('query') || '';
+  const category = searchParams.get('category') || '';
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const limit = parseInt(searchParams.get('limit') || '10', 10);
   const offset = (page - 1) * limit;
   
-  if (!query) {
-    return NextResponse.json({
-      books: [],
-      users: [],
-      borrowRequests: [],
-      accountRequests: []
-    });
-  }
+  console.log('Search API called with:', { query, category, page, limit }); // Debug log
   
   try {
-    const results: any = {};
+    let whereClause = undefined;
     
-    // Search books
-    if (type === 'books' || type === 'all') {
-      const bookResults = await db.select()
-        .from(books)
-        .where(
-          or(
-            like(books.title, `%${query}%`),
-            like(books.author, `%${query}%`),
-            like(books.category, `%${query}%`),
-            like(books.description, `%${query}%`),
-            like(books.isbn, `%${query}%`)
-          )
-        )
-        .limit(limit)
-        .offset(offset);
+    // Only add filters if they're provided
+    if (query || category) {
+      const conditions = [];
       
-      results.books = bookResults;
+      if (query) {
+        conditions.push(
+          or(
+            ilike(books.title, `%${query}%`),
+            ilike(books.author, `%${query}%`),
+            ilike(books.genre, `%${query}%`),
+            ilike(books.description, `%${query}%`)
+          )
+        );
+      }
+      
+      if (category) {
+        conditions.push(
+          ilike(books.genre, `%${category}%`)
+        );
+      }
+      
+      // Combine conditions with AND
+      whereClause = conditions.length > 1 
+        ? and(...conditions) 
+        : conditions[0];
     }
     
-    // Search users
-    if (type === 'users' || type === 'all') {
-      const userResults = await db.select()
-        .from(users)
-        .where(
-          or(
-            like(users.name, `%${query}%`),
-            like(users.email, `%${query}%`),
-            like(users.username, `%${query}%`)
-          )
-        )
-        .limit(limit)
-        .offset(offset);
-      
-      results.users = userResults;
-    }
+    console.log('Where clause created:', whereClause); // Debug log
     
-    // Search borrow requests
-    if (type === 'borrow-requests' || type === 'all') {
-      const borrowResults = await db
-        .select({
-          request: borrowRequests,
-          book: {
-            title: books.title,
-            author: books.author,
-          },
-          user: {
-            name: users.name,
-            email: users.email,
-          }
-        })
-        .from(borrowRequests)
-        .leftJoin(books, eq(borrowRequests.bookId, books.id))
-        .leftJoin(users, eq(borrowRequests.userId, users.id))
-        .where(
-          or(
-            like(books.title, `%${query}%`),
-            like(books.author, `%${query}%`),
-            like(users.name, `%${query}%`),
-            like(users.email, `%${query}%`),
-            like(borrowRequests.status, `%${query}%`)
-          )
-        )
-        .limit(limit)
-        .offset(offset);
-      
-      results.borrowRequests = borrowResults;
-    }
+    const results = await db.select()
+      .from(books)
+      .where(whereClause)
+      .limit(limit)
+      .offset(offset);
     
-    // Search account requests
-    if (type === 'account-requests' || type === 'all') {
-      const accountResults = await db
-        .select()
-        .from(accountRequests)
-        .where(
-          or(
-            like(accountRequests.name, `%${query}%`),
-            like(accountRequests.email, `%${query}%`),
-            like(accountRequests.status, `%${query}%`)
-          )
-        )
-        .limit(limit)
-        .offset(offset);
-      
-      results.accountRequests = accountResults;
-    }
+    console.log(`Found ${results.length} books`); // Debug log
     
     return NextResponse.json(results);
   } catch (error) {
     console.error('Search error:', error);
-    return NextResponse.json(
-      { error: 'Failed to perform search' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

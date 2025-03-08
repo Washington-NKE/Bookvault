@@ -1,12 +1,12 @@
 import { IKImage, ImageKitProvider, IKUpload } from "imagekitio-next";
 import config from "@/lib/config";
 import { useRef, useState } from "react";
-import { Image } from "lucide-react";
+import Image  from "next/image";
 import {toast} from "@/hooks/use-toast";
 
 const {
     env: {
-      imagekit: { publicKey, privateKey, urlEndpoint },
+      imagekit: { publicKey, urlEndpoint },
     },
   } = config;
   const authenticator = async () => {
@@ -27,18 +27,18 @@ const {
       console.log("Received Auth Params:", data);
   
       return { token, expire, signature };
-    } catch (error: any) {
-      throw new Error(`Authentication request failed: ${error.message}`);
-  
+    } catch (error: unknown) {
+      throw new Error(`Authentication request failed: ${error instanceof Error ? error.message : String(error)}`);
+
     }
   };
 
 const ImageUpload =({onFileChange}:{onFileChange: (filePath: string)=> void;
 })=>{
-    const ikUploadRef = useRef(null);
+    const ikUploadRef = useRef<HTMLInputElement>(null);
     const [file, setFile] = useState<{filePath: string} | null>(null);
 
-    const onError = (error: any)=>{
+    const onError = (error: unknown)=>{
         console.log(error);
 
         toast({
@@ -47,7 +47,11 @@ const ImageUpload =({onFileChange}:{onFileChange: (filePath: string)=> void;
             variant: 'destructive',
         });
     }
-    const onSuccess = (res: any)=>{
+    interface IKUploadResponse {
+        filePath: string;
+    }
+
+    const onSuccess = (res: IKUploadResponse)=>{
         setFile(res);
         onFileChange(res.filePath);
 

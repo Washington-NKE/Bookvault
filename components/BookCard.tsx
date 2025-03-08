@@ -3,8 +3,6 @@ import Link from "next/link";
 import BookCover from "@/components/BookCover";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { ScrollText } from "lucide-react";
 import Receipt from "./Receipt";
 
 interface BorrowInfo {

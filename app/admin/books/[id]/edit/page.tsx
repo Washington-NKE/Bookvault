@@ -12,7 +12,22 @@ import { eq } from 'drizzle-orm';
 const EditBookPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const [book, setBook] = useState(null);
+  interface Book {
+    id: string;
+    title: string;
+    author: string;
+    genre: string;
+    rating: number;
+    coverUrl: string;
+    coverColor: string;
+    description: string;
+    totalCopies: number;
+    availableCopies: number;
+    videoUrl: string;
+    summary: string;
+    createdAt: Date | null;
+  }
+  const [book, setBook] = useState<Book | null>(null);
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [genre, setGenre] = useState('');
@@ -51,7 +66,7 @@ const EditBookPage = () => {
           availableCopies,
           rating,
         })
-        .where(eq(books.id, id));
+        .where(eq(books.id, id as string));
       toast({
         title: 'Success',
         description: 'Book updated successfully',
@@ -73,41 +88,59 @@ const EditBookPage = () => {
 
   return (
     <section className="w-full rounded-2xl bg-white p-7">
-      <h2 className="text-xl font-semibold mb-4">Edit Book</h2>
+      <h2 className=" mb-4 text-xl font-semibold">Edit Book</h2>
       <div className="space-y-4">
-        <Input
-          label="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <Input
-          label="Author"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-        <Input
-          label="Genre"
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
-        />
-        <Input
-          label="Total Copies"
-          type="number"
-          value={totalCopies}
-          onChange={(e) => setTotalCopies(Number(e.target.value))}
-        />
-        <Input
-          label="Available Copies"
-          type="number"
-          value={availableCopies}
-          onChange={(e) => setAvailableCopies(Number(e.target.value))}
-        />
-        <Input
-          label="Rating"
-          type="number"
-          value={rating}
-          onChange={(e) => setRating(Number(e.target.value))}
-        />
+        <div className="space-y-2">
+          <label htmlFor="title">Title</label>
+          <Input
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="author">Author</label>
+          <Input
+            id="author"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="genre">Genre</label>
+          <Input
+            id="genre"
+            value={genre}
+            onChange={(e) => setGenre(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="totalCopies">Total Copies</label>
+          <Input
+            id="totalCopies"
+            type="number"
+            value={totalCopies}
+            onChange={(e) => setTotalCopies(Number(e.target.value))}
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="availableCopies">Available Copies</label>
+          <Input
+            id="availableCopies"
+            type="number"
+            value={availableCopies}
+            onChange={(e) => setAvailableCopies(Number(e.target.value))}
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="rating">Rating</label>
+          <Input
+            id="rating"
+            type="number"
+            value={rating}
+            onChange={(e) => setRating(Number(e.target.value))}
+          />
+        </div>
         <Button onClick={handleSave} className="bg-primary-admin text-white">
           Save
         </Button>

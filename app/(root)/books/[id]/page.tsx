@@ -2,10 +2,10 @@ import React from "react";
 import { db } from "@/database/drizzle";
 import { books } from "@/database/schema";
 import { eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import BookOverview from "@/components/BookOverview";
 import BookVideo from "@/components/BookVideo";
+import { redirect } from "next/navigation";
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;

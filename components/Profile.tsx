@@ -4,12 +4,35 @@ import { db } from '@/database/drizzle'
 import { users } from '@/database/schema'
 import { eq } from 'drizzle-orm'
 import { Badge } from './ui/badge'
-import { ShieldCheck } from 'lucide-react'
+import { ShieldCheck, Clock, AlertCircle } from 'lucide-react'
 
 const Profile = async ({userId}:{userId: string}) => {
   const user = await db.select().from(users).where(eq(users.id, userId)).then((res) => res[0]);
 
   if(!user) return null;
+
+  // Badge configuration based on status
+  const badgeConfig = {
+    "APPROVED": {
+      text: "Verified Student",
+      icon: <ShieldCheck className='ml-0 mr-2 size-5 text-amber-500' />,
+      color: "border-purple-500 text-purple-400"
+    },
+    "PENDING": {
+      text: "Pending Verification",
+      icon: <Clock className='ml-0 mr-2 size-5 text-blue-500' />,
+      color: "border-blue-500 text-blue-400"
+    },
+    "REJECTED": {
+      text: "Verification Failed",
+      icon: <AlertCircle className='ml-0 mr-2 size-5 text-red-500' />,
+      color: "border-red-500 text-red-400"
+    }
+  };
+
+  // Default to pending if status is missing or not in our config
+  const status = user.status || "PENDING";
+  const badge = badgeConfig[status] || badgeConfig["PENDING"];
 
   return (
       <Card className='relative h-[500px]  w-[380px] border-none bg-[#1c1c27]  pt-10 text-white shadow-md'>
@@ -23,9 +46,9 @@ const Profile = async ({userId}:{userId: string}) => {
           <div className='mb-4 flex items-center gap-3'>
             <div>
               <div className='flex items-center gap-2'>
-                <Badge variant="outline" className='border-purple-500 text-purple-400'>
-                <ShieldCheck className='ml-0 mr-2 size-5 text-amber-500' />
-                  Verified Student
+                <Badge variant="outline" className={badge.color}>
+                  {badge.icon}
+                  {badge.text}
                 </Badge>
                   
               </div>

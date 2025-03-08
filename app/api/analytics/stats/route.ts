@@ -12,9 +12,16 @@ export async function GET() {
     previousMonth.setMonth(previousMonth.getMonth() - 1);
     const previousMonthStart = new Date(previousMonth.getFullYear(), previousMonth.getMonth(), 1);
     const previousMonthEnd = new Date(previousMonth.getFullYear(), previousMonth.getMonth() + 1, 0);
-
-    // Get borrowed books counts
-    const [currentBorrows] = await db
+    
+    // Get total borrowed books count (all time)
+    const [totalBorrows] = await db
+      .select({
+        count: sql<number>`count(*)::integer`.as('count'),
+      })
+      .from(borrowRecords);
+    
+    // Get borrowed books for current and previous month (for change calculation)
+    const [currentMonthBorrows] = await db
       .select({
         count: sql<number>`count(*)::integer`.as('count'),
       })
@@ -25,8 +32,8 @@ export async function GET() {
           lte(borrowRecords.borrowDate, currentMonth)
         )
       );
-
-    const [previousBorrows] = await db
+    
+    const [previousMonthBorrows] = await db
       .select({
         count: sql<number>`count(*)::integer`.as('count'),
       })
@@ -37,9 +44,16 @@ export async function GET() {
           lte(borrowRecords.borrowDate, previousMonthEnd)
         )
       );
-
-    // Get total users count and change
-    const [currentUsers] = await db
+    
+    // Get total users count (all time)
+    const [totalUsers] = await db
+      .select({
+        count: sql<number>`count(*)::integer`.as('count'),
+      })
+      .from(users);
+    
+    // Get users for current and previous month (for change calculation)
+    const [currentMonthUsers] = await db
       .select({
         count: sql<number>`count(*)::integer`.as('count'),
       })
@@ -50,8 +64,8 @@ export async function GET() {
           lte(users.createdAt, currentMonth)
         )
       );
-
-    const [previousUsers] = await db
+    
+    const [previousMonthUsers] = await db
       .select({
         count: sql<number>`count(*)::integer`.as('count'),
       })
@@ -62,9 +76,16 @@ export async function GET() {
           lte(users.createdAt, previousMonthEnd)
         )
       );
-
-    // Get total books count and change
-    const [currentBooks] = await db
+    
+    // Get total books count (all time)
+    const [totalBooks] = await db
+      .select({
+        count: sql<number>`count(*)::integer`.as('count'),
+      })
+      .from(books);
+    
+    // Get books for current and previous month (for change calculation)
+    const [currentMonthBooks] = await db
       .select({
         count: sql<number>`count(*)::integer`.as('count'),
       })
@@ -75,8 +96,8 @@ export async function GET() {
           lte(books.createdAt, currentMonth)
         )
       );
-
-    const [previousBooks] = await db
+    
+    const [previousMonthBooks] = await db
       .select({
         count: sql<number>`count(*)::integer`.as('count'),
       })
@@ -87,19 +108,19 @@ export async function GET() {
           lte(books.createdAt, previousMonthEnd)
         )
       );
-
+    
     return Response.json({
       borrowedBooks: {
-        current: currentBorrows.count || 0,
-        change: (currentBorrows.count || 0) - (previousBorrows.count || 0)
+        current: totalBorrows.count || 0,
+        change: (currentMonthBorrows.count || 0) - (previousMonthBorrows.count || 0)
       },
       totalUsers: {
-        current: currentUsers.count || 0,
-        change: (currentUsers.count || 0) - (previousUsers.count || 0)
+        current: totalUsers.count || 0,
+        change: (currentMonthUsers.count || 0) - (previousMonthUsers.count || 0)
       },
       totalBooks: {
-        current: currentBooks.count || 0,
-        change: (currentBooks.count || 0) - (previousBooks.count || 0)
+        current: totalBooks.count || 0,
+        change: (currentMonthBooks.count || 0) - (previousMonthBooks.count || 0)
       }
     });
   } catch (error) {

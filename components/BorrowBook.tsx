@@ -54,6 +54,7 @@ const BorrowBook = ({
         });
       }
     } catch (error) {
+      console.error(error);
       toast({
         title: "Error",
         description: "An error occurred while borrowing the book",

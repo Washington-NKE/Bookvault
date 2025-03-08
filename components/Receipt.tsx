@@ -4,12 +4,22 @@ import React, { useEffect, useRef, useState } from 'react'
 import html2canvas from 'html2canvas';
 import { ScrollText } from "lucide-react"
 
+interface ReceiptData {
+    receiptId: string;
+    issueDate: string;
+    bookTitle: string;
+    bookAuthor: string;
+    bookGenre: string;
+    dueDate: string;
+    duration: number;
+}
+
 interface ReceiptProps {
     receiptId: string;
 }
 
 const Receipt = ({ receiptId }: ReceiptProps) => {
-    const [receipt, setReceipt] = useState<any>(null);
+    const [receipt, setReceipt] = useState<ReceiptData | null>(null);
     const receiptRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -47,7 +57,7 @@ const Receipt = ({ receiptId }: ReceiptProps) => {
             // Create and trigger download
             const link = document.createElement("a");
             link.href = canvas.toDataURL("image/png");
-            link.download = `receipt_${receipt.receiptId}.png`;
+            link.download = `receipt_${receipt?.receiptId || 'unknown'}.png`;
             document.body.appendChild(link); // Necessary for Firefox
             link.click();
             document.body.removeChild(link);

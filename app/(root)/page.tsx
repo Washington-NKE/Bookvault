@@ -4,7 +4,6 @@ import { db } from "@/database/drizzle";
 import { books } from "@/database/schema";
 import { auth } from "@/auth";
 import { desc } from "drizzle-orm";
-import SearchBar from "@/components/SearchBar";
 
 const Home = async () => {
   const session = await auth();
@@ -17,9 +16,7 @@ const Home = async () => {
 
   return (
     <>
-      <div className="text-sm text-white ">
-      <SearchBar />
-      </div>
+      
      
       <BookOverview {...latestBooks[0]} userId={session?.user?.id as string} />
 

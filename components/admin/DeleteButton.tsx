@@ -19,6 +19,7 @@ export const DeleteButton = ({ userId, onDelete }: DeleteButtonProps) => {
         description: "User deleted successfully",
       });
     } catch (error) {
+      console.error("Error deleting user:", error);
       toast({
         title: "Error",
         description: "Failed to delete user",
@@ -34,7 +35,7 @@ export const DeleteButton = ({ userId, onDelete }: DeleteButtonProps) => {
       size="icon"
       className="text-red-500 hover:text-red-700"
     >
-      <Trash2 className="h-4 w-4" />
+      <Trash2 className="size-4" />
     </Button>
   );
 };
