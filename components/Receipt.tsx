@@ -12,6 +12,8 @@ interface ReceiptData {
     bookGenre: string;
     dueDate: string;
     duration: number;
+    borrowerName: string;       
+    registrationNumber: string;  
 }
 
 interface ReceiptProps {
@@ -24,7 +26,7 @@ const Receipt = ({ receiptId }: ReceiptProps) => {
 
     useEffect(() => {
         async function fetchReceipt() {
-            const res = await fetch(`/api/borrow/${receiptId}`); // Added leading slash
+            const res = await fetch(`/api/borrow/${receiptId}`);
             const data = await res.json();
             setReceipt(data);
         }
@@ -35,7 +37,6 @@ const Receipt = ({ receiptId }: ReceiptProps) => {
         if (!receiptRef.current) return;
 
         try {
-            // Temporarily make the receipt visible for capture
             const originalPosition = receiptRef.current.style.position;
             const originalVisibility = receiptRef.current.style.visibility;
             
@@ -44,23 +45,24 @@ const Receipt = ({ receiptId }: ReceiptProps) => {
             receiptRef.current.style.zIndex = '-1000';
             
             const canvas = await html2canvas(receiptRef.current, {
-                scale: 2, // Better quality
-                backgroundColor: '#111827', // Dark background
+                scale: 2, 
+                backgroundColor: '#111827',
                 logging: false
             });
             
-            // Restore original styles
+           
             receiptRef.current.style.position = originalPosition;
             receiptRef.current.style.visibility = originalVisibility;
             receiptRef.current.style.zIndex = '';
 
-            // Create and trigger download
+           
             const link = document.createElement("a");
             link.href = canvas.toDataURL("image/png");
-            link.download = `receipt_${receipt?.receiptId || 'unknown'}.png`;
-            document.body.appendChild(link); // Necessary for Firefox
+            link.download = `receipt_${receipt?.bookTitle || 'unknown'}.png`;
+            document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+
         } catch (error) {
             console.error('Error generating receipt:', error);
         }
@@ -72,7 +74,6 @@ const Receipt = ({ receiptId }: ReceiptProps) => {
 
     return (
         <div className="flex flex-col items-center">
-            {/* Receipt template for capture */}
             <div
                 ref={receiptRef}
                 className="fixed left-0 top-0 w-[500px] bg-gray-900 text-white p-6 rounded-lg shadow-lg border border-gray-700"
@@ -88,9 +89,15 @@ const Receipt = ({ receiptId }: ReceiptProps) => {
                     Receipt ID: <span className="text-blue-400 font-semibold">#{receipt.receiptId}</span>
                 </p>
                 <p className="text-sm">Date Issued: <span className="text-gray-300">{receipt.issueDate}</span></p>
+    
+                <div className="mt-4 border-t border-gray-700 pt-3">
+                    <h4 className="font-semibold text-gray-400">Borrower Details:</h4>
+                    <p className="text-sm"><strong>Name:</strong> {receipt.borrowerName}</p>
+                    <p className="text-sm"><strong>Reg. Number:</strong> {receipt.registrationNumber}</p>
+                </div>
 
                 <div className="mt-4">
-                    <h4 className="text-gray-400 font-semibold">Book Details:</h4>
+                    <h4 className="font-semibold text-gray-400">Book Details:</h4>
                     <p className="text-sm"><strong>Title:</strong> {receipt.bookTitle}</p>
                     <p className="text-sm"><strong>Author:</strong> {receipt.bookAuthor}</p>
                     <p className="text-sm"><strong>Genre:</strong> {receipt.bookGenre}</p>
@@ -101,9 +108,10 @@ const Receipt = ({ receiptId }: ReceiptProps) => {
 
                 <div className="mt-4 text-sm text-gray-400">
                     <h4 className="font-semibold">Terms</h4>
-                    <ul className="list-disc list-inside">
+                    <ul className="list-inside list-disc ">
                         <li>Please return the book by the due date.</li>
                         <li>Lost or damaged books may incur replacement costs.</li>
+                        <li>This receipt serves as proof of borrowing and must be presented when returning the book.</li>
                     </ul>
                 </div>
 
@@ -117,7 +125,7 @@ const Receipt = ({ receiptId }: ReceiptProps) => {
             {/* Download button */}
             <button
                 onClick={(e) => {
-                    e.preventDefault(); // Prevent navigation
+                    e.preventDefault();
                     downloadReceipt();
                 }}
                 className="p-2 bg-transparent text-white rounded-md hover:text-blue-500"

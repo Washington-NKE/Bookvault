@@ -47,15 +47,26 @@ export const signUp = async (params: AuthCredentials) => {
 
   if (!success) return redirect("/too-fast");
 
-  const existingUser = await db
+  const existingUserByEmail = await db
+  .select()
+  .from(users)
+  .where(eq(users.email, email))
+  .limit(1);
+
+  const existingUserByRegNo = await db
     .select()
     .from(users)
-    .where(eq(users.email, email))
+    .where(eq(users.registrationNumber, registrationNumber))
     .limit(1);
 
-  if (existingUser.length > 0) {
-    return { success: false, error: "User already exists" };
+  if (existingUserByEmail.length > 0) {
+    return { success: false, error: "User with this email already exists" };
   }
+
+  if (existingUserByRegNo.length > 0) {
+    return { success: false, error: "User with this registration number already exists" };
+  }
+
 
   const hashedPassword = await hash(password, 10);
 

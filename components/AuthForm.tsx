@@ -111,6 +111,17 @@ const AuthForm = <T extends FieldValues>({
             />
           ))}
 
+          {isSignIn && (
+            <div className="flex justify-end">
+              <Link
+                href="/forgot-password"
+                className="text-sm font-medium text-primary hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
+          )}
+
           <Button type="submit" className="form-btn">
             {isSignIn ? "Sign In" : "Sign Up"}
           </Button>
@@ -118,7 +129,7 @@ const AuthForm = <T extends FieldValues>({
       </Form>
 
       <p className="text-center text-base font-medium">
-        {isSignIn ? "New to BookWise? " : "Already have an account? "}
+        {isSignIn ? "New to BookVault? " : "Already have an account? "}
 
         <Link
           href={isSignIn ? "/sign-up" : "/sign-in"}

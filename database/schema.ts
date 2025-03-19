@@ -25,7 +25,7 @@ export const users = pgTable("users", {
   fullName: varchar("full_name", { length: 255 }).notNull(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  registrationNumber: text("registration_number").notNull(),
+  registrationNumber: text("registration_number").notNull().unique(),
   status: STATUS_ENUM("status").default("PENDING"),
   role: ROLE_ENUM("role").default("USER"),
   lastActivityDate: date("last_activity_date").defaultNow(),
@@ -64,5 +64,16 @@ export const borrowRecords = pgTable("borrow_records", {
   dueDate: date("due_date").notNull(),
   returnDate: date("return_date"),
   status: BORROW_STATUS_ENUM("status").default("BORROWED").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
+
+export const passwordResetTokens = pgTable("password_reset_tokens", {
+  id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
+  userId: uuid("user_id")
+    .references(() => users.id)
+    .notNull(),
+  token: text("token").notNull().unique(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });

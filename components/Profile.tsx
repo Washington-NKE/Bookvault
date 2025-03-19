@@ -11,7 +11,6 @@ const Profile = async ({userId}:{userId: string}) => {
 
   if(!user) return null;
 
-  // Badge configuration based on status
   const badgeConfig = {
     "APPROVED": {
       text: "Verified Student",
@@ -30,7 +29,6 @@ const Profile = async ({userId}:{userId: string}) => {
     }
   };
 
-  // Default to pending if status is missing or not in our config
   const status = user.status || "PENDING";
   const badge = badgeConfig[status] || badgeConfig["PENDING"];
 

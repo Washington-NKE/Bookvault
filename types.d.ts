@@ -38,3 +38,17 @@ interface BorrowBookParams {
   bookId: string;
   userId: string;
 }
+
+interface PasswordResetToken {
+  id: string;
+  userId: string;
+  token: string;
+  expiresAt: Date;
+  createdAt: Date;
+}
+
+interface CreatePasswordResetToken {
+  userId: string;
+  token: string;
+  expiresAt: Date;
+}
