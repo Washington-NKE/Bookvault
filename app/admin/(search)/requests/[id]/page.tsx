@@ -79,13 +79,13 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
           <h1 className="text-3xl font-bold">Borrow Request</h1>
           <RequestStatusBadge status={requestDetails.status} />
         </div>
-        <p className="text-light-100">
+        <p className="text-gray-600 dark:text-light-100">
           Request ID: {requestDetails.id}
         </p>
       </div>
 
       <div className="request-overview grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-        <div className="book-info flex border border-light-900 rounded-lg overflow-hidden">
+        <div className="book-info flex border border-gray-200 dark:border-light-900 rounded-lg overflow-hidden shadow-sm">
           <div 
             className="w-32 h-full relative" 
             style={{ backgroundColor: requestDetails.bookCoverColor }}
@@ -98,44 +98,44 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
             />
           </div>
           <div className="p-6 flex flex-col flex-1">
-            <Link href={`/books/${requestDetails.bookId}`} className="text-2xl font-semibold hover:text-primary-500">
+            <Link href={`/books/${requestDetails.bookId}`} className="text-2xl font-semibold hover:text-primary-500 transition-colors">
               {requestDetails.bookTitle}
             </Link>
-            <p className="text-lg text-light-200 mb-4">{requestDetails.bookAuthor}</p>
-            <p className="text-sm bg-light-900 text-light-100 px-3 py-1 rounded-full inline-block mb-4 w-fit">
+            <p className="text-lg text-gray-700 dark:text-light-200 mb-4">{requestDetails.bookAuthor}</p>
+            <p className="text-sm bg-gray-100 dark:bg-light-900 text-gray-700 dark:text-light-100 px-3 py-1 rounded-full inline-block mb-4 w-fit">
               {requestDetails.bookGenre}
             </p>
-            <p className="line-clamp-3 text-light-100 mb-4">
+            <p className="line-clamp-3 text-gray-600 dark:text-light-100 mb-4">
               {requestDetails.bookDescription}
             </p>
           </div>
         </div>
 
-        <div className="request-details border border-light-900 rounded-lg p-6">
+        <div className="request-details border border-gray-200 dark:border-light-900 rounded-lg p-6 shadow-sm">
           <h3 className="text-xl font-semibold mb-4">Request Details</h3>
           
           <div className="space-y-4">
             <div>
-              <p className="text-light-100 text-sm">Borrower</p>
-              <Link href={`/users/${requestDetails.userId}`} className="text-lg font-medium hover:text-primary-500">
+              <p className="text-gray-500 dark:text-light-100 text-sm">Borrower</p>
+              <Link href={`/users/${requestDetails.userId}`} className="text-lg font-medium hover:text-primary-500 transition-colors">
                 {requestDetails.userName}
               </Link>
-              <p className="text-sm">{requestDetails.userEmail}</p>
-              <p className="text-sm">ID: {requestDetails.userRegistrationNumber}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{requestDetails.userEmail}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">ID: {requestDetails.userRegistrationNumber}</p>
             </div>
 
-            <div className="border-t border-light-900 pt-4">
-              <p className="text-light-100 text-sm">Borrow Timeline</p>
+            <div className="border-t border-gray-200 dark:border-light-900 pt-4">
+              <p className="text-gray-500 dark:text-light-100 text-sm">Borrow Timeline</p>
               <div className="grid grid-cols-2 gap-4 mt-2">
                 <div>
-                  <p className="text-sm">Request Date</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Request Date</p>
                   <p className="font-medium">
                     {format(new Date(requestDetails.createdAt ?? Date.now()), "MMM d, yyyy")}
                   </p>
                 </div>
                 
                 <div>
-                  <p className="text-sm">Borrow Date</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Borrow Date</p>
                   <p className="font-medium">
                     {requestDetails.borrowDate 
                       ? format(new Date(requestDetails.borrowDate), "MMM d, yyyy")
@@ -144,7 +144,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 </div>
                 
                 <div>
-                  <p className="text-sm">Due Date</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Due Date</p>
                   <p className={`font-medium ${daysRemaining !== null && daysRemaining < 0 ? "text-red-500" : ""}`}>
                     {requestDetails.dueDate 
                       ? format(new Date(requestDetails.dueDate), "MMM d, yyyy")
@@ -155,7 +155,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 </div>
                 
                 <div>
-                  <p className="text-sm">Return Date</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Return Date</p>
                   <p className="font-medium">
                     {requestDetails.returnDate 
                       ? format(new Date(requestDetails.returnDate), "MMM d, yyyy")
@@ -166,8 +166,8 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
             
             {isAdmin && (
-              <div className="border-t border-light-900 pt-4">
-                <p className="text-light-100 text-sm mb-3">Admin Actions</p>
+              <div className="border-t border-gray-200 dark:border-light-900 pt-4">
+                <p className="text-gray-500 dark:text-light-100 text-sm mb-3">Admin Actions</p>
                 <RequestActions 
                   requestId={requestDetails.id} 
                   currentStatus={requestDetails.status}
